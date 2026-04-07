@@ -4,9 +4,12 @@ server:
 spring:
     application:
         name: config-server
+
+    profiles:
+        active: native
+
     cloud:
         config:
             server:
-                git:
-                    uri: https://github.com/Hansana-Sandamini/agms-config
-                    default-label: main
+                native:
+                    search-locations: file:///home/hansana/Documents/AD2/FINAL/AGMS/config-repo
