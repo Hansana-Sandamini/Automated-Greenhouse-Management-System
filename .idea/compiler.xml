@@ -19,7 +19,7 @@
         </processorPath>
         <module name="api-gateway" />
       </profile>
-      <profile name="Annotation profile for zone-service" enabled="true">
+      <profile name="Annotation profile for sensor-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
