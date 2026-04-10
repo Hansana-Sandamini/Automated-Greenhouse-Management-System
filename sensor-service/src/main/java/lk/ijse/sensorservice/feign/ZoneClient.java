@@ -1,5 +1,6 @@
 package lk.ijse.sensorservice.feign;
 
+import lk.ijse.sensorservice.dto.ZoneDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -7,5 +8,5 @@ import org.springframework.web.bind.annotation.*;
 public interface ZoneClient {
 
     @GetMapping("/zones/{id}")
-    Object getZoneById(@PathVariable("id") Long id);
+    ZoneDTO getZoneById(@PathVariable Long id);
 }

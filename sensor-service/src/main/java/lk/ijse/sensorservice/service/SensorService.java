@@ -26,7 +26,7 @@ public class SensorService {
     public Sensor save(Sensor sensor) {
 
         try {
-            ZoneDTO zone = (ZoneDTO) zoneClient.getZoneById(sensor.getZoneId());
+            ZoneDTO zone = zoneClient.getZoneById(sensor.getZoneId());
 
             if (zone == null) {
                 throw new ResourceNotFoundException(
@@ -51,7 +51,7 @@ public class SensorService {
     @CircuitBreaker(name = "zoneService", fallbackMethod = "zoneFallback")
     public SensorResponseDTO getSensorWithZone(Sensor sensor) {
 
-        ZoneDTO zone = (ZoneDTO) zoneClient.getZoneById(sensor.getZoneId());
+        ZoneDTO zone = zoneClient.getZoneById(sensor.getZoneId());
 
         SensorResponseDTO response = new SensorResponseDTO();
         response.setId(sensor.getId());
