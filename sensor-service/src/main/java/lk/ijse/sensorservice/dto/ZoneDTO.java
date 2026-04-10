@@ -6,10 +6,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SensorDTO {
+public class ZoneDTO {
 
     private Long id;
     private String name;
-    private String type;
-    private Long zoneId;
+    private String location;
 }
