@@ -1,5 +1,6 @@
 package lk.ijse.sensorservice.controller;
 
+import lk.ijse.sensorservice.dto.SensorResponseDTO;
 import lk.ijse.sensorservice.entity.Sensor;
 import lk.ijse.sensorservice.service.SensorService;
 import org.springframework.web.bind.annotation.*;
@@ -25,4 +26,10 @@ public class SensorController {
     public List<Sensor> getAll() {
         return service.getAll();
     }
+
+    @GetMapping("/{id}")
+    public SensorResponseDTO getSensor(@PathVariable Long id) {
+        return service.getSensorById(id);
+    }
+
 }

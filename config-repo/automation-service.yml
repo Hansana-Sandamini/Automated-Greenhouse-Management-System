@@ -5,6 +5,17 @@ spring:
     application:
         name: automation-service
 
+    datasource:
+        url: jdbc:mysql://localhost:3306/automation_db
+        username: root
+        password: Ijse@1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+
 eureka:
     client:
         service-url:

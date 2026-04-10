@@ -80,4 +80,13 @@ public class SensorService {
 
         return response;
     }
+
+    public SensorResponseDTO getSensorById(Long id) {
+
+        Sensor sensor = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Sensor not found with ID: " + id));
+
+        return getSensorWithZone(sensor);
+    }
+
 }
