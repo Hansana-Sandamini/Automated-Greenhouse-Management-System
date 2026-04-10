@@ -1,6 +1,10 @@
 package lk.ijse.sensorservice.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lk.ijse.sensorservice.dto.SensorResponseDTO;
+import lk.ijse.sensorservice.dto.ZoneDTO;
 import lk.ijse.sensorservice.entity.Sensor;
+import lk.ijse.sensorservice.exception.ResourceNotFoundException;
 import lk.ijse.sensorservice.repository.SensorRepository;
 import lk.ijse.sensorservice.feign.ZoneClient;
 import org.springframework.stereotype.Service;
@@ -18,13 +22,22 @@ public class SensorService {
         this.zoneClient = zoneClient;
     }
 
+    // Save Sensor with Zone Validation
     public Sensor save(Sensor sensor) {
 
-        // Validate zone exists before saving
-        Object zone = zoneClient.getZoneById(sensor.getZoneId());
+        try {
+            ZoneDTO zone = (ZoneDTO) zoneClient.getZoneById(sensor.getZoneId());
 
-        if (zone == null) {
-            throw new RuntimeException("Zone not found");
+            if (zone == null) {
+                throw new ResourceNotFoundException(
+                        "Zone not found with ID: " + sensor.getZoneId()
+                );
+            }
+
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(
+                    "Zone not found with ID: " + sensor.getZoneId()
+            );
         }
 
         return repository.save(sensor);
@@ -32,5 +45,39 @@ public class SensorService {
 
     public List<Sensor> getAll() {
         return repository.findAll();
+    }
+
+    // Circuit Breaker + DTO mapping
+    @CircuitBreaker(name = "zoneService", fallbackMethod = "zoneFallback")
+    public SensorResponseDTO getSensorWithZone(Sensor sensor) {
+
+        ZoneDTO zone = (ZoneDTO) zoneClient.getZoneById(sensor.getZoneId());
+
+        SensorResponseDTO response = new SensorResponseDTO();
+        response.setId(sensor.getId());
+        response.setName(sensor.getName());
+        response.setType(sensor.getType());
+        response.setZone(zone);
+
+        return response;
+    }
+
+    // Fallback Method
+    public SensorResponseDTO zoneFallback(Sensor sensor, Throwable t) {
+
+        SensorResponseDTO response = new SensorResponseDTO();
+        response.setId(sensor.getId());
+        response.setName(sensor.getName());
+        response.setType(sensor.getType());
+
+        // Return dummy zone instead of null
+        ZoneDTO fallbackZone = new ZoneDTO();
+        fallbackZone.setId(sensor.getZoneId());
+        fallbackZone.setName("Unavailable");
+        fallbackZone.setLocation("Service Down");
+
+        response.setZone(fallbackZone);
+
+        return response;
     }
 }

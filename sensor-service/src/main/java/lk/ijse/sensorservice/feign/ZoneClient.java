@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "zone-service")
 public interface ZoneClient {
 
-    @GetMapping("/api/v1/zones/{id}")
+    @GetMapping("/zones/{id}")
     Object getZoneById(@PathVariable("id") Long id);
 }
